@@ -5,12 +5,9 @@ export class User {
   @ObjectIdColumn()
   id: ObjectId;
 
-  @Column()
-  nickName: string;
+  @Column({ unique: true })
+  email: string;
 
   @Column()
   password: string;
-
-  @Column({ default: true })
-  isActive: boolean;
 }

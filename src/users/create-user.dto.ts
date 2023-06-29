@@ -1,5 +1,5 @@
 class CreateUserDto {
-  nickName: string;
+  email: string;
   password: string;
 }
 
