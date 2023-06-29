@@ -1,7 +1,7 @@
 {
   "name": "nest-chat",
   "version": "0.0.1",
-  "description": "chat backend",
+  "description": "backend chat application",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
