@@ -5,10 +5,12 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  Get,
 } from '@nestjs/common';
-import { CreateUserDto } from './create-user.dto';
+import CreateUserDto from './create-user.dto';
 import { UsersService } from './users.service';
 import { Error } from '../utils/errors';
+import { User } from './user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -30,5 +32,11 @@ export class UsersController {
         },
       );
     }
+  }
+
+  @Get()
+  @HttpCode(200)
+  async findAll(): Promise<User[]> {
+    return await this.usersService.findAll();
   }
 }

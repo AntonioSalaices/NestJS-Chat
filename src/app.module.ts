@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { User } from './users/user.entity';
 import { UsersModule } from './users/users.module';
+import { AuthenticationModule } from './authentication/authentication.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -18,6 +19,7 @@ import { UsersModule } from './users/users.module';
       synchronize: true, //Should be disabled in production, given that we can lose data
     }),
     UsersModule,
+    AuthenticationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
