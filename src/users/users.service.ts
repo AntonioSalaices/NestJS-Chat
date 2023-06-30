@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ObjectId, Repository } from 'typeorm';
+import { ObjectId as ObjectIdType, Repository } from 'typeorm';
 import { User } from './user.entity';
 import CreateUserDto from './create-user.dto';
-
+import { ObjectId } from 'mongodb';
 @Injectable()
 export class UsersService {
   constructor(
@@ -21,12 +21,32 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  getByEmail(email: string): Promise<User> {
-    return this.usersRepository.findOneBy({ email });
+  async getByEmail(email: string) {
+    const user = await this.usersRepository.findOneBy({ email });
+
+    if (user) {
+      return user;
+    }
+
+    throw new HttpException(
+      'User with this id does not exist',
+      HttpStatus.NOT_FOUND,
+    );
   }
 
-  findOne(id: ObjectId): Promise<User | null> {
-    return this.usersRepository.findOneBy({ id });
+  async getById(id: ObjectIdType) {
+    const user = await this.usersRepository.findOne({
+      where: { _id: new ObjectId(id) },
+    } as any);
+
+    if (user) {
+      return user;
+    }
+
+    throw new HttpException(
+      'User with this id does not exist',
+      HttpStatus.NOT_FOUND,
+    );
   }
 
   async remove(id: ObjectId): Promise<void> {

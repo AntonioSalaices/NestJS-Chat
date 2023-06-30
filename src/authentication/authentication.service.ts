@@ -3,10 +3,29 @@ import * as bcrypt from 'bcrypt';
 import RegisterUserDto from './register-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/user.entity';
-
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { TokenPayload } from './tokenPayload.interface';
+import { ObjectId } from 'typeorm';
 @Injectable()
 export class AuthenticationService {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  public getCookieWithJwtToken(userId: ObjectId) {
+    const payload: TokenPayload = { userId };
+    const token = this.jwtService.sign(payload);
+    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
+      'JWT_EXPIRATION_TIME',
+    )}`;
+  }
+
+  public getCookieForLogout() {
+    return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
+  }
 
   async create(registrationData: RegisterUserDto): Promise<User> {
     try {
